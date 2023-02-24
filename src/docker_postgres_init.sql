@@ -1,0 +1,11 @@
+CREATE DATABASE identity;
+GRANT ALL PRIVILEGES ON DATABASE identity to db_user;
+
+CREATE DATABASE products;
+GRANT ALL PRIVILEGES ON DATABASE products to db_user;
+
+CREATE DATABASE orders;
+GRANT ALL PRIVILEGES ON DATABASE orders to db_user;
+
+CREATE DATABASE payments;
+GRANT ALL PRIVILEGES ON DATABASE payments to db_user;
