@@ -28,5 +28,5 @@ jobs:
     - name: Setup yarn
       run: npm install -g yarn
     - run: yarn install --frozen-lockfile
-    - run: cd src/services
     - run: npm test
+      working-directory: ./src/services
