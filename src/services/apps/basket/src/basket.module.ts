@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
-import { AbilityModule } from './ability/ability.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { RedisModule, RedisModuleOptions } from '@liaoliaots/nestjs-redis';
+import { BasketController } from './basket.controller';
+import { BasketService } from './basket.service';
 import configuration from './config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@app/auth/jwt/jwt.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
+import { BasketRepository } from './basket.repository';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: 'apps/product/.env',
+      envFilePath: 'apps/basket/.env',
       load: [configuration],
     }),
     JwtModule.registerAsync({
@@ -26,16 +26,23 @@ import { JwtStrategy } from './passport/jwt.strategy';
         },
       }),
     }),
-    TypeOrmModule.forRootAsync({
+    RedisModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        return { ...configService.get('database'), autoLoadEntities: true };
-      },
+      useFactory: (configService: ConfigService): RedisModuleOptions => ({
+        config: configService.get('redis'),
+      }),
       inject: [ConfigService],
     }),
-    AbilityModule,
   ],
-  controllers: [ProductsController],
-  providers: [ProductsService, JwtStrategy],
+  controllers: [BasketController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    JwtStrategy,
+    BasketService,
+    BasketRepository,
+  ],
 })
-export class ProductsModule {}
+export class BasketModule {}
