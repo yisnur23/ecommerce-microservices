@@ -31,7 +31,7 @@ export class ProductsService {
   }
 
   getUserProducts(userId: string) {
-    return this.getUserProducts(userId);
+    return this.productRepository.getUserProducts(userId);
   }
 
   updateProduct(id: string, update: UpdateProductDto, product?: Product) {

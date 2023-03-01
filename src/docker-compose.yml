@@ -56,8 +56,7 @@ services:
     depends_on:
       - redis
 
-
-  redis: 
+  redis:
     container_name: redis.basket
     image: redislabs/rejson:latest
     networks:
@@ -87,5 +86,3 @@ volumes:
   pgdata:
 networks:
   webnet:
-
-  

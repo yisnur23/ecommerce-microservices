@@ -21,7 +21,7 @@ import { ProductAbility } from './product.ability';
 import { CreateProductDto, UpdateProductDto } from './product.dto';
 import { ProductsService } from './products.service';
 
-@Controller()
+@Controller('product')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
@@ -41,17 +41,17 @@ export class ProductsController {
     return this.productsService.getAllProducts(take, skip);
   }
 
-  @Get(':id')
-  @Public()
-  findProduct(@Param('id') id: string) {
-    return this.productsService.getProduct(id);
-  }
-
   @Get('user_products')
   @CheckAbility(ProductAbility.Read)
   @UseGuards(JwtAuthGuard, ProductAbilityGuard)
   getUserProducts(@User() user: AuthenticatedUser) {
     return this.productsService.getUserProducts(user.id);
+  }
+
+  @Get(':id')
+  @Public()
+  findProduct(@Param('id') id: string) {
+    return this.productsService.getProduct(id);
   }
 
   @Patch(':id')

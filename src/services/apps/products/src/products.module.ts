@@ -9,12 +9,13 @@ import configuration from './config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@app/auth/jwt/jwt.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
+import { ProductRepository } from './product.repository';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: 'apps/product/.env',
+      envFilePath: 'apps/products/.env',
       load: [configuration],
     }),
     JwtModule.registerAsync({
@@ -36,6 +37,6 @@ import { JwtStrategy } from './passport/jwt.strategy';
     AbilityModule,
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, JwtStrategy],
+  providers: [JwtStrategy, ProductsService, ProductRepository],
 })
 export class ProductsModule {}

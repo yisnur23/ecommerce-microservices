@@ -46,6 +46,8 @@ export class AbilityGuard implements CanActivate {
 
     request.resource = resource;
 
+    if (!resource) return true;
+
     return ability.can(rule.action, resource);
   }
 }
