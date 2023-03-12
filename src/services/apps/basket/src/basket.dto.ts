@@ -1,3 +1,5 @@
+import { IsOptional } from 'class-validator';
+
 export class CartItemDto {
   productName: string;
   productId: string;
@@ -7,4 +9,10 @@ export class CartItemDto {
 
 export class UpdateItemQuantityDto {
   quantity: number;
+}
+
+export class AddProductToCartDto {
+  productId: string;
+  @IsOptional()
+  quantity?: number;
 }

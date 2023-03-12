@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package products;
+
+service ProductsGrpcController{
+    rpc GetProduct(ProductId) returns (Product);
+}
+
+message Product {
+    string id = 1;
+    string name = 2;
+    int32 price = 3; 
+}
+
+message ProductId {
+    string id = 1;
+}

@@ -10,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@app/auth/jwt/jwt.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { ProductRepository } from './product.repository';
+import { ProductsGrpcController } from './grpc/product.grpc.controller';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { ProductRepository } from './product.repository';
     }),
     AbilityModule,
   ],
-  controllers: [ProductsController],
+  controllers: [ProductsController, ProductsGrpcController],
   providers: [JwtStrategy, ProductsService, ProductRepository],
 })
 export class ProductsModule {}

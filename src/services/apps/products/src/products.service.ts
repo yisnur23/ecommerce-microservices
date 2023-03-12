@@ -1,4 +1,3 @@
-import { Resource } from '@app/decorators/resource.decorator';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from './entities/products.entity';
 import { CreateProductDto, UpdateProductDto } from './product.dto';

@@ -1,7 +1,7 @@
 import { User } from '@app/decorators/user.decorator';
 import { AuthenticatedUser } from '@app/types/user.type';
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { CartItemDto } from './basket.dto';
+import { AddProductToCartDto, CartItemDto } from './basket.dto';
 import { BasketService } from './basket.service';
 
 @Controller('basket')
@@ -15,7 +15,7 @@ export class BasketController {
 
   @Post()
   addItemToCart(
-    @Body() cartItem: CartItemDto,
+    @Body() cartItem: AddProductToCartDto,
     @User() user: AuthenticatedUser,
   ) {
     return this.basketService.addItemToCart(cartItem, user.id);

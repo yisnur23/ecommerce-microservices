@@ -9,6 +9,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '@app/auth/jwt/jwt.guard';
 import { JwtStrategy } from './passport/jwt.strategy';
 import { BasketRepository } from './basket.repository';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -33,6 +35,20 @@ import { BasketRepository } from './basket.repository';
       }),
       inject: [ConfigService],
     }),
+    ClientsModule.registerAsync([
+      {
+        name: 'PRODUCT_SERVICE',
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            package: 'products',
+            protoPath: join(process.cwd(), 'libs/proto-files/products.proto'),
+            url: configService.get('productsServiceUrl'),
+          },
+        }),
+        inject: [ConfigService],
+      },
+    ]),
   ],
   controllers: [BasketController],
   providers: [

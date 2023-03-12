@@ -3,7 +3,7 @@ import { Length, Min } from 'class-validator';
 
 export class CreateProductDto {
   @Length(2)
-  title: string;
+  name: string;
   @Length(2)
   description: string;
   @Min(0)

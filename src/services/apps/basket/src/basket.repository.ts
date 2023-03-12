@@ -26,7 +26,7 @@ export class BasketRepository {
   async addItemToCart(cartItem: CartItemDto, userId: string) {
     const cartKey = `cart:${userId}`;
     const cart = await this.getCart(cartKey);
-    console.log('cart', cart);
+
     if (!cart) {
       const newCart = [];
       newCart.push(cartItem);
