@@ -79,6 +79,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
 
 volumes:
   redis:
