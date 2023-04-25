@@ -12,15 +12,64 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "8000:8000"
-    command: npm run start:dev auth
+    command: npm run start:dev identity
     env_file:
       - ./services/apps/identity/.env
+    networks:
+      - webnet
     depends_on:
       - postgres
+  product:
+    container_name: product
+    build:
+      context: .
+      dockerfile: ./services/apps/products/Dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8001:8001"
+    command: npm run start:dev products
+    env_file:
+      - ./services/apps/products/.env
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+  basket:
+    container_name: basket
+    build:
+      context: .
+      dockerfile: ./services/apps/basket/Dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8001:8001"
+    command: npm run start:dev basket
+    env_file:
+      - ./services/apps/basket/.env
+    networks:
+      - webnet
+    depends_on:
+      - redis
 
+  redis:
+    container_name: redis.basket
+    image: redislabs/rejson:latest
+    networks:
+      - webnet
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
   postgres:
     container_name: postgres
     image: postgres
+    networks:
+      - webnet
     environment:
       POSTGRES_USER: db_user
       POSTGRES_PASSWORD: password
@@ -30,6 +79,13 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management-alpine
 
 volumes:
+  redis:
+    driver: local
   pgdata:
+networks:
+  webnet:

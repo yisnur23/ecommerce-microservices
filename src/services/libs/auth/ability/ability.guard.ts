@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CHECK_ABILITY } from '../decorators/ability.decorator';
 import { RequiredRule } from '../rule.interface';
 import { BaseAbilityFactory } from './base-ability-factory';
@@ -12,6 +12,15 @@ export class AbilityGuard implements CanActivate {
     private abilityFactory: BaseAbilityFactory,
     private dataSource: DataSource,
   ) {}
+
+  protected async getResource(resourceId: string, repository: Repository<any>) {
+    return await repository.findOne({
+      where: { id: resourceId },
+      relations: {
+        user: true,
+      },
+    });
+  }
 
   async canActivate(context: ExecutionContext) {
     const rule = this.reflector.get<RequiredRule>(
@@ -33,14 +42,11 @@ export class AbilityGuard implements CanActivate {
 
     const repository = this.dataSource.getRepository(rule.subject);
 
-    const resource = await repository.findOne({
-      where: { id: resourceId },
-      relations: {
-        user: true,
-      },
-    });
+    const resource = await this.getResource(resourceId, repository);
 
     request.resource = resource;
+
+    if (!resource) return true;
 
     return ability.can(rule.action, resource);
   }
